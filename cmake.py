@@ -1,9 +1,9 @@
 #!/usr/bin/python
 #
-# Configuration Maker
+# Configuration Maker - cmake.py 
 # Author: Chris Davies VMB DS
 # Started: July 2019
-# 
+#
 # Command line options
 # -w = write configs to filesystem
 # -d = display configs to display
@@ -90,10 +90,10 @@ def main(argv):
       elif opt == '-d':
          display_config_files = "Y"
          print ("Command line option -d | Display config files.")
-         
+
 if __name__ == "__main__":
    main(sys.argv[1:])
-  
+
 # Check config_data_filename exists
 from pathlib import Path
 my_file = Path(config_data_filename)
@@ -112,7 +112,7 @@ if my_base_config_file.is_file():
     print ("Confirmed base configuration file exists: " + base_config_filename)
 else:
     # File is missing
-    exit("Base configuration file is missing, I will now die!")    
+    exit("Base configuration file is missing, I will now die!")
 
 # Show Display config options
 if (display_config_files == "Y"):
@@ -139,7 +139,7 @@ if (option_site_request > 0) and (option_site_request <= len(data)-1):
 
 # Count number of sites.
 sitecount = len(data)-1
-print ("Number of sites found in `" + config_data_filename + "`: ", sitecount)    
+print ("Number of sites found in `" + config_data_filename + "`: ", sitecount)
 
 # Force keys to be lower case
 data[0] =  ([x.lower() for x in data[0]])
@@ -194,7 +194,7 @@ if 'template1' in data[0]:
          template1_config[file] = ''
 
 
-# Read base configuration file into a string variable 
+# Read base configuration file into a string variable
 with open(base_config_filename, 'r') as file:
     base_config = config = file.read()
 
@@ -215,7 +215,7 @@ for x in range(len(data)-1):
 
     # Load the additional template1 config this one time for this site only.
     config = config + template1_config[data[x][template1_index]]
-    
+
     # Loop though the key_names replacing the text
     for  y in range(len(data[0])):
 
@@ -224,20 +224,20 @@ for x in range(len(data)-1):
         # https://stackoverflow.com/questions/919056/case-insensitive-replace
         import re
         config = re.sub("{"+ data[0][y] +"}", data[x][y], config, flags=re.IGNORECASE)
-        
+
         # Increment y for next tag
         y += 1
-    
+
     # Print parsed config to display if -d argument set on command line.
     if (display_config_files == "Y"):
        print (config)
 
     # Output built config files to filesystem if -w argument set on command line.
     if (write_config_files == "Y"):
-        new_file=open(data[x][0] + ".txt",mode="w") 
+        new_file=open(data[x][0] + ".txt",mode="w")
         new_file.write(config)
         new_file.close()
-    
+
     # reset template for next config file.
     config = base_config
 
