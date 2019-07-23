@@ -1,0 +1,9 @@
+! 2 stack configuration
+!
+interface range g1/0/1 - {top_int}
+switchport
+switchport mode access
+!
+interface range g2/0/1 - 48
+switchport
+switchport mode access

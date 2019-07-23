@@ -1,0 +1,5 @@
+hostname,DATA_vlan_index,data_vlan_name,data_ip_address,data_ip_mask,enable_secret,admin_user,admin_secret,vty_password,ignore,top_int,template1
+BOTS-B1-RA1,100,DATA,192.168.10.1,255.255.255.0,en-secret,admin,adminpass,con_pass,bsbo,23,2stack.txt
+BOTS-B2-RA1,100,DATA,192.168.20.1,255.255.255.0,en-secret,admin,adminpass,con_pass,bsbo,23,3stack.txt
+BOTS-B3-RA1,100,DATA,172.16.16.1,255.255.254.0,en-secret,admin,adminpass,con_pass,bsbs,23,
+BOTS-B4-RA1,100,DATA,172.22.16.1,255.255.0.0,en-secret,admin,adminpass,con_pass,bsbs,47,2stack.txt

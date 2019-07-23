@@ -1,0 +1,17 @@
+!
+hostname {HOSTname}
+!
+enable secret {enable_secret}
+!
+vlan {data_vlan_index}
+name {data_vlan_name}
+!
+username {admin_user} secret {admin_secret}
+!
+interface vlan {data_vlan_index}
+ip address {data_ip_address} {data_ip_mask}
+!
+line vty 0 4
+password {vty_password}
+input all
+!
