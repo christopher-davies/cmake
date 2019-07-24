@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Configuration Maker - cmake.py 
+# Configuration Maker - cmake.py
 # Author: Chris Davies VMB DS
 # Started: July 2019
 #
@@ -38,7 +38,7 @@ option_config_data_filename = ''
 option_base_config_filename = ''
 cwd = os.getcwd()
 script_name = os.path.basename(__file__)
-version = "16"
+version = "17"
 title = "Configuration Maker"
 write_config_files = "N"
 display_config_files = "N"
