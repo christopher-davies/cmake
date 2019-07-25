@@ -126,9 +126,21 @@ if (write_config_files == "Y"):
 else:
    print ("Generated configs will NOT be written to the filesystem. Use -w argument to write configs.")
 
-# Read config_data_filename CSV into an array - data[{row}][{col}]
-with open(config_data_filename, newline='') as csvfile:
-    data = list(csv.reader(csvfile))
+# Split the extension from the path and normalise it to lowercase.
+ext = os.path.splitext(config_data_filename)[-1].lower()
+
+# Read config_data_filename into an array, choose the way this is handeled based on the extension - data[{row}][{col}]
+if ext == ".csv":
+    # Read the CSV file
+    with open(config_data_filename, newline='') as csvfile:
+        data = list(csv.reader(csvfile))
+elif ext == ".xls":
+    exit ("I dont support excel just yet, this option is in progress!")
+    # https://www.quora.com/How-do-I-read-data-from-an-open-Excel-file-in-Python
+else:
+    exit ("is an unknown file format.")
+
+
 
 # If a site ref is requested then create a new data list with just headings row(0) and that site data only
 if (option_site_request > 0) and (option_site_request <= len(data)-1):
