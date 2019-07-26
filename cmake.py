@@ -31,14 +31,14 @@ import sys
 # required for command line argument processing
 import getopt
 
-# Script Variables /  Define defaults here!
+# # Script Variables /  Define defaults here!
 config_data_filename = 'config-data.csv'
 base_config_filename = 'base-config.txt'
 option_config_data_filename = ''
 option_base_config_filename = ''
 cwd = os.getcwd()
 script_name = os.path.basename(__file__)
-version = "18"
+version = "20"
 title = "Configuration Maker"
 write_config_files = "N"
 display_config_files = "N"
@@ -46,6 +46,8 @@ option_site_request = 0
 template1_config = dict()
 template1_filename_list = []
 template1_filename_list_unique = []
+# Define the default end of the config filename which is always {hostname}.output_filename
+output_filename = '.txt'
 
 # Collect command line arguments
 argument_count = len(sys.argv)
@@ -131,6 +133,18 @@ elif ext == ".xls":
 else:
     exit ("is an unknown file format.")
 
+# Check data[1] for existance of defined generated config filename output. `output_filename`. Default is `.txt`
+if 'output_filename' in data[0]:
+    # Get the index of this `output_filename`
+    output_filename_index = data[0].index('output_filename')
+    # Get the `output_filename` we only get row1 as this name is applied to all generated config files.
+    output_filename = (data[1][output_filename_index])
+    print ("Found output config filename append text: {hostname}" + output_filename)
+    # Remove this from data[][output_filename_index] so it does not get processed further.
+    for i in range(len(data)-1):
+        del data[i][output_filename_index]
+
+
 # Check data[1] for existance of defined base_config_file under heading `base_config_filename` we only check row1 as base applies to all.
 if 'base_config_filename' in data[0]:
     # get the index of this file
@@ -138,6 +152,9 @@ if 'base_config_filename' in data[0]:
     # Get the base_config_filename, we only get the 1st row as base applies to all otherwise its a template1 additional config.
     base_config_filename = (data[1][base_config_filename_index])
     print ("Found Base Config Filename defined in the config data file: " + base_config_filename)
+    # Remove this from data[][base_config_filename_index] so it does not get processed further.
+    for i in range(len(data)-1):
+        del data[i][base_config_filename_index]
 
 
 # Check base config exists
@@ -166,7 +183,7 @@ data[0] =  ([x.lower() for x in data[0]])
 
 # Count the number of keys
 keycount = len(data[0])
-print ("\n# Number of keys found in `" + config_data_filename + "`: ", keycount, "(Keys only Forced to lowercase)")
+print ("\n# " , keycount , " {keys} found in `" + config_data_filename + "`: ")
 
 # Create the keys for replacement in the base config.
 for  i in range(len(data[0])):
@@ -179,7 +196,7 @@ for  i in range(len(data[0])):
 if 'template1' in data[0]:
    # template1 exists so lets get the index
    template1_index = data[0].index('template1')
-   print ("\n\n# Additional configuration templates, indicated under `template1` is in index: ", template1_index)
+   print ("\n\n# Additional configuration templates, indicated under `template1`.")
    # Create template1_config[t] start at 1 (0 is the header), t = site
    t = 0
    while t < sitecount:
@@ -224,7 +241,7 @@ if (display_config_files == "Y"):
     print(base_config)
 
 # Parse the config data with the base template and output data + new config to screen.
-print ("\n# Parsing the configuration data and replacing the base config {tags}.")
+print ("\n# Parsing the configuration data and replacing the config {keys}.")
 
 # Loop to go though the config data rows excluding row 0 used for the keys, 1 onwards.
 for x in range(len(data)-1):
@@ -255,7 +272,7 @@ for x in range(len(data)-1):
 
     # Output built config files to filesystem if -w argument set on command line.
     if (write_config_files == "Y"):
-        new_file=open(data[x][0] + ".txt",mode="w")
+        new_file=open(data[x][0] + output_filename,mode="w")
         new_file.write(config)
         new_file.close()
 
@@ -263,4 +280,4 @@ for x in range(len(data)-1):
     config = base_config
 
 # Output parse results.
-print ("\n# Count of parsed config data and config:" , x)
+print ("\n# Count generated configs:" , x)
