@@ -4,13 +4,6 @@
 # Author: Chris Davies VMB DS
 # Started: July 2019
 #
-# Command line options
-# -w = write configs to filesystem
-# -d = display configs to display
-# -h = Show help
-# -c filename.csv = Import a customer data CSV different to the default.
-# -b filename.txt = Import a base config file different to the default.
-# -s siteRef = Select a single site to process site 1 is the first line of config data below the heading.
 #
 # Summery of events
 # 1. Script imports a customer data CSV named `config-data.csv`, the top row(0) headings become {keys}.
@@ -38,7 +31,7 @@ option_config_data_filename = ''
 option_base_config_filename = ''
 cwd = os.getcwd()
 script_name = os.path.basename(__file__)
-version = "20"
+version = "21"
 title = "Configuration Maker"
 write_config_files = "N"
 display_config_files = "N"
@@ -48,6 +41,24 @@ template1_filename_list = []
 template1_filename_list_unique = []
 # Define the default end of the config filename which is always {hostname}.output_filename
 output_filename = '.txt'
+# Help text
+cli_help_text = script_name + ''' [options]
+\nDESCRIPTION:
+This Script imports customer data then parses an IOS config file to generate individual device configurations.
+\nDEFAULTS:
+Customer Data: config-data.csv
+Base Config: base-config.txt
+Display generated configs to the display: NO
+Write generated configs to the filesystem: NO
+\nOPTIONS:
+-c <option_config_data_filename>     // Define the config-data file from the default.
+-b <option_base_config_filename>     // Define the base-config from the default.
+-w                                   // Write the generated configurations to the filesystem.
+-d                                   // Generate the configuration and display to the screen only.
+-h                                   // Show help.
+\nIMPLEMENTATION:
+Written by Chris Davies July 2019 in Windows Python 3.7
+'''
 
 # Collect command line arguments
 argument_count = len(sys.argv)
@@ -71,11 +82,11 @@ def main(argv):
    try:
       opts, args = getopt.getopt(argv,"hwdc:b:s:",["cdfile=","bcfile=","site="])
    except getopt.GetoptError:
-      print (script_name + ' -c <option_config_data_filename> -b <option_base_config_filename> -w (write configs to FS) -d (display configs)')
+      print (cli_help_text)
       sys.exit(2)
    for opt, arg in opts:
       if opt == '-h':
-         print (script_name + ' -c <option_config_data_filename> -b <option_base_config_filename> -w (write configs to FS) -d (display configs)')
+         print (cli_help_text)
          sys.exit()
       elif opt in ("-s", "--site"):
          option_site_request = int(arg)
