@@ -38,7 +38,7 @@ option_config_data_filename = ''
 option_base_config_filename = ''
 cwd = os.getcwd()
 script_name = os.path.basename(__file__)
-version = "17"
+version = "18"
 title = "Configuration Maker"
 write_config_files = "N"
 display_config_files = "N"
@@ -104,15 +104,6 @@ else:
     # File is missing
     exit("Configuration data file is missing, I will now die!")
 
-# Check base config exists
-from pathlib import Path
-my_base_config_file = Path(base_config_filename)
-if my_base_config_file.is_file():
-    # file exists
-    print ("Confirmed base configuration file exists: " + base_config_filename)
-else:
-    # File is missing
-    exit("Base configuration file is missing, I will now die!")
 
 # Show Display config options
 if (display_config_files == "Y"):
@@ -140,7 +131,24 @@ elif ext == ".xls":
 else:
     exit ("is an unknown file format.")
 
+# Check data[1] for existance of defined base_config_file under heading `base_config_filename` we only check row1 as base applies to all.
+if 'base_config_filename' in data[0]:
+    # get the index of this file
+    base_config_filename_index = data[0].index('base_config_filename')
+    # Get the base_config_filename, we only get the 1st row as base applies to all otherwise its a template1 additional config.
+    base_config_filename = (data[1][base_config_filename_index])
+    print ("Found Base Config Filename defined in the config data file: " + base_config_filename)
 
+
+# Check base config exists
+from pathlib import Path
+my_base_config_file = Path(base_config_filename)
+if my_base_config_file.is_file():
+    # file exists
+    print ("Confirmed base configuration file exists: " + base_config_filename)
+else:
+    # File is missing
+    exit("Base configuration file is missing, I will now die!")
 
 # If a site ref is requested then create a new data list with just headings row(0) and that site data only
 if (option_site_request > 0) and (option_site_request <= len(data)-1):
@@ -210,9 +218,10 @@ if 'template1' in data[0]:
 with open(base_config_filename, 'r') as file:
     base_config = config = file.read()
 
-# Print the base configuration to the display
-print ("\n\n# This is the base configuration, keys are case-insensitive and enclosed in {}:")
-print(base_config)
+# Print the base configuration to the display if -d command line requested
+if (display_config_files == "Y"):
+    print ("\n\n# This is the base configuration, keys are case-insensitive and enclosed in {}:")
+    print(base_config)
 
 # Parse the config data with the base template and output data + new config to screen.
 print ("\n# Parsing the configuration data and replacing the base config {tags}.")
