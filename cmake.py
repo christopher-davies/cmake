@@ -4,7 +4,6 @@
 # Author: Chris Davies VMB DS
 # Started: July 2019
 #
-#
 # Summery of events
 # 1. Script imports a customer data CSV named `config-data.csv`, the top row(0) headings become {keys}.
 # 2. A base IOS config file is imported with {keys} enclosed in curly brackets.
@@ -51,11 +50,12 @@ Base Config: base-config.txt
 Display generated configs to the display: NO
 Write generated configs to the filesystem: NO
 \nOPTIONS:
--c <option_config_data_filename>     // Define the config-data file from the default.
--b <option_base_config_filename>     // Define the base-config from the default.
--w                                   // Write the generated configurations to the filesystem.
--d                                   // Generate the configuration and display to the screen only.
--h                                   // Show help.
+-c <config_data_filename>     # Define the config-data file from the default.
+-b <base_config_filename>     # Define the base-config from the default.
+-w                            # Write the generated configurations to the filesystem.
+-d                            # Display the generated configurations to the screen only.
+-s <site_ref_number>          # Generate configuration for a single site, first site = 1.
+-h                            # Show help.
 \nIMPLEMENTATION:
 Written by Chris Davies July 2019 in Windows Python 3.7
 '''
@@ -152,7 +152,7 @@ if 'output_filename' in data[0]:
     output_filename = (data[1][output_filename_index])
     print ("Found output config filename append text: {hostname}" + output_filename)
     # Remove this from data[][output_filename_index] so it does not get processed further.
-    for i in range(len(data)-1):
+    for i in range(len(data)):
         del data[i][output_filename_index]
 
 
@@ -164,7 +164,7 @@ if 'base_config_filename' in data[0]:
     base_config_filename = (data[1][base_config_filename_index])
     print ("Found Base Config Filename defined in the config data file: " + base_config_filename)
     # Remove this from data[][base_config_filename_index] so it does not get processed further.
-    for i in range(len(data)-1):
+    for i in range(len(data)):
         del data[i][base_config_filename_index]
 
 
