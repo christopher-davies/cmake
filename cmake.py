@@ -177,8 +177,14 @@ if 'base_config_filename' in data[0]:
     # Remove this from data[][base_config_filename_index] so it does not get processed further.
     for i in range(len(data)):
         # Need to check the index position exists before delete
-        del data[i][base_config_filename_index]
-
+        try:
+            data[i][base_config_filename_index]
+        except IndexError:
+            # handle this IndexError
+            print ("\n # Data Cleanup: Inconsistant column count in `" + config_data_filename + "` row `",i,"` are you missing a comma? Ignored anyway.\n")
+        else:
+            # Delete the index position in all sites to cleanup the data.
+            del data[i][base_config_filename_index]
 
 # Check base config exists
 from pathlib import Path
