@@ -30,7 +30,7 @@ option_config_data_filename = ''
 option_base_config_filename = ''
 cwd = os.getcwd()
 script_name = os.path.basename(__file__)
-version = "21"
+version = "22"
 title = "Configuration Maker"
 write_config_files = "N"
 display_config_files = "N"
@@ -49,6 +49,7 @@ Customer Data: config-data.csv
 Base Config: base-config.txt
 Display generated configs to the display: NO
 Write generated configs to the filesystem: NO
+Generated configuration site filenames: {hostname}.txt
 \nOPTIONS:
 -c <config_data_filename>     # Define the config-data file from the default.
 -b <base_config_filename>     # Define the base-config from the default.
@@ -144,6 +145,7 @@ elif ext == ".xls":
 else:
     exit ("is an unknown file format.")
 
+
 # Check data[1] for existance of defined generated config filename output. `output_filename`. Default is `.txt`
 if 'output_filename' in data[0]:
     # Get the index of this `output_filename`
@@ -153,7 +155,16 @@ if 'output_filename' in data[0]:
     print ("Found output config filename append text: {hostname}" + output_filename)
     # Remove this from data[][output_filename_index] so it does not get processed further.
     for i in range(len(data)):
-        del data[i][output_filename_index]
+        # Need to check the index position exists before delete
+        try:
+            data[i][output_filename_index]
+        except IndexError:
+            # handle this IndexError
+            print ("\n # Data Cleanup: Inconsistant column count in `" + config_data_filename + "` row `",i,"` are you missing a comma? Ignored anyway.\n")
+        else:
+            # Delete the index position in all sites to cleanup the data.
+            del data[i][output_filename_index]
+
 
 
 # Check data[1] for existance of defined base_config_file under heading `base_config_filename` we only check row1 as base applies to all.
@@ -165,6 +176,7 @@ if 'base_config_filename' in data[0]:
     print ("Found Base Config Filename defined in the config data file: " + base_config_filename)
     # Remove this from data[][base_config_filename_index] so it does not get processed further.
     for i in range(len(data)):
+        # Need to check the index position exists before delete
         del data[i][base_config_filename_index]
 
 
