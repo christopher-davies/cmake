@@ -24,17 +24,23 @@ import sys
 import getopt
 
 # # Script Variables /  Define defaults here!
+# Default configuration data filename - This is overridden in cli.
 config_data_filename = 'config-data.csv'
+# default base configuration file which applies to all generated configs. - This is overridden in order, cli, config_data_filename.
 base_config_filename = 'base-config.txt'
 option_config_data_filename = ''
 option_base_config_filename = ''
+# CWD - Current Working Directory
 cwd = os.getcwd()
 script_name = os.path.basename(__file__)
-version = "22"
+version = "23"
 title = "Configuration Maker"
+# Default to NOT write generated config files to the filesystem, requires a cli -w option.
 write_config_files = "N"
+# Default to NOT display generated config files to the display, requires a cli -d option.
 display_config_files = "N"
 option_site_request = 0
+# Defined the template1 variables as a dictionary and lists.
 template1_config = dict()
 template1_filename_list = []
 template1_filename_list_unique = []
@@ -143,7 +149,7 @@ elif ext == ".xls":
     exit ("I dont support excel just yet, this option is in progress!")
     # https://www.quora.com/How-do-I-read-data-from-an-open-Excel-file-in-Python
 else:
-    exit ("is an unknown file format.")
+    exit ("is an unknown file format, silly boy!")
 
 
 # Check data[1] for existance of defined generated config filename output. `output_filename`. Default is `.txt`
@@ -248,7 +254,7 @@ if 'template1' in data[0]:
       my_file = Path(file)
       if my_file.is_file():
          # file exists
-         print ("Exists! Loading template1 config into dictionary...")
+         print ("Exists! Loading site specific config named in `template1` into dictionary...")
          # Load the file
          with open (file, "r") as myfile:
             template1_load_config = myfile.read()
@@ -256,7 +262,7 @@ if 'template1' in data[0]:
          template1_config[file] = template1_load_config
       else:
          # File does not exist, assume no requirement for additional config for this site.
-         print ("File not found! Using a blank template1")
+         print ("File not found or none defined! No site specific config will be appended.")
          template1_config[file] = ''
 
 
